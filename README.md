@@ -1,6 +1,3 @@
----
-permalink: https://github.com/lpenge/ANN
----
 
 
 
@@ -8,7 +5,8 @@ permalink: https://github.com/lpenge/ANN
 
 # ANN
 
-Damit dieser Code funktioniert, muss dieser Code in VSCode oder ein ähnliches Programm als .py Datei eingefügt werden. Zusüätzlich müssen der trainings- und Testsatz der MNIST-Datenbank als csv Dateien heruntergeladen werden 
+Damit dieser Code funktioniert, muss dieser Code in VSCode oder ein ähnliches Programm als .py Datei eingefügt werden. Zusüätzlich müssen der trainings- und Testsatz der MNIST-Datenbank als csv Dateien heruntergeladen werden. 
+In den letzten 25 Zeilen des codes kann man ändern, wie das Training abläuft (um L2 Regularisierung an / auszuschalten muss in der Funktion "Train_network_batch()" im Gradienten-berechnungsabschnitt die Addiewwrung von Lambda durch # an oder ausgeschalten werden. Der code wird dann mit mnist.py im Terminal ausgeführt, und gibt am Ende die Genauigkeit des Netzwerkes bei dem Erlernen der MNIST-Datenbank.
 
 
 
@@ -366,7 +364,7 @@ train_acc = []
 
 img = load_all_images("mnist_train.csv")
 
-wr = load_network("net/Wand_net_196_100_10_025.pkl")
+wr = create_random_network()
 
 wr = train_network_batch(wr, learning_rate)
 
