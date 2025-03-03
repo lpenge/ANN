@@ -8,7 +8,7 @@
 Damit dieser Code funktioniert, muss dieser Code in VSCode oder ein ähnliches Programm als .py Datei eingefügt werden. Zusüätzlich müssen der trainings- und Testsatz der MNIST-Datenbank als csv Dateien heruntergeladen werden. 
 In den letzten 25 Zeilen des codes kann man ändern, wie das Training abläuft (um L2 Regularisierung an / auszuschalten muss in der Funktion "Train_network_batch()" im Gradienten-berechnungsabschnitt die Addiewwrung von Lambda durch # an oder ausgeschalten werden. Der code wird dann mit mnist.py im Terminal ausgeführt, und gibt am Ende die Genauigkeit des Netzwerkes bei dem Erlernen der MNIST-Datenbank.
 
-
+train_network_batch ist das tatsächliche trainieren desd Netzwerks, dies wird aber unterstützt durch die test_network() Funktion, welche das Netzwerk mit einem Bild durchpropagiert und dann den Output dieses Netzwerks ausgibt. Das Netzwerk selbst wird erstmal als zufüälliges Netzwerk in create_random_network() hergestellt. 
 
 from PIL import Image, ImageFilter
 import copy
@@ -19,6 +19,8 @@ import math
 import csv
 import numpy
 
+gibt die Sigmoid-aktivierung für den Input x aus
+
 def sigmoid(x):
 
     exp = numpy.exp(-x)
@@ -27,6 +29,9 @@ def sigmoid(x):
 
     return 1.0 / (1.0 + exp)
     return 1 / (1 + math.exp(-x))
+
+läd ein einzelnes Bild in den Speicher
+
 def load_image(path):
 
     img = Image.open(path)
@@ -35,7 +40,7 @@ def load_image(path):
     img = img.filter(ImageFilter.Kernel((3, 3), (-1, -1, -1, -1, 8, -1, -1, -1, -1), 1, 0))
     return list(img.getdata())
 
-
+gibt ein zufüälliges Netzwerk aus, in welchem Bereich zufällige Zahlen ausgewählt werden, wird in round(random.uniform()) festgelegt
 def create_random_network():
 
     layers = neuron_count
@@ -60,6 +65,8 @@ def create_random_network():
     
     return network
     
+gibt ein leeres Netzwerk aus, hier werden die Gradienten zwischengespeichert
+
 def create_empty_network():
 
     layers = neuron_count
@@ -84,17 +91,22 @@ def create_empty_network():
         network.append(this_layer)
     return network
 
+#speichert das Netzwerk dauerhaft
 
 def save_network(path, network):
 
     with open(path, 'wb') as f:
         pickle.dump(network, f)
 
+#läd ein gespeichertes Netzwerk in den Speicher
+
 def load_network(path):
 
     with open(path, 'rb') as f:
         mynewlist = pickle.load(f)
     return mynewlist
+
+#gibt dem Netzwerk zufüällige Gewichtungen
 
 def randomize_network(weightof, network, from_numb, to_numb):
 
@@ -115,7 +127,7 @@ def randomize_network(weightof, network, from_numb, to_numb):
 
 
 
-
+#hier wird das Netzwerk trainiert
 
 def train_network_batch(network, learning_rate):
 
@@ -133,10 +145,8 @@ def train_network_batch(network, learning_rate):
     right = 0
     wrong = 0
     for ö in range(5400):
-        #ALR:
+        #learning rate decay:
         learning_rate -= learning_rate/1000
-        
-        
         cost_net.append(create_empty_network())
         total_error = []
         lool = []
@@ -254,6 +264,7 @@ def train_network_batch(network, learning_rate):
 
     return network
 
+#überprüft mithilfe des test-satzes, wie gut das Netzwerk mit den Bildern trainiert wurde
 
 def test_accuracy(network):
     
@@ -271,6 +282,8 @@ def test_accuracy(network):
                 incorrect += 1
 
     print(f"Correct: " + str(correct) + " Incorrect: " + str(incorrect) + " " + str((100*correct)/(8900)))    
+
+#läd die gefragten Bilder in den Speicher
 
 def load_all_images(path):
 
@@ -321,6 +334,8 @@ def load_all_images(path):
         label_counter[int(label)][0] += 1
     return b
 
+#gibt die Softmax-aktivierung eines Neuron-Outputs A in der Gesamtzahl an Neuronen-Outputs (b) an 
+
 def softmax(a, b):
 
     total = 0
@@ -328,6 +343,8 @@ def softmax(a, b):
         total += numpy.exp(i) 
     total = numpy.exp(a)/total
     return total
+
+#gibt nach angabe eines zu überprüfenden Bildes den derzeitigen Output und den Output der verschiedenen Schichten des Netzwerks an
 
 def test_network(network, path):
 
