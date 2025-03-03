@@ -18,6 +18,7 @@ import random
 import math
 import csv
 import numpy
+
 def sigmoid(x):
 
     exp = numpy.exp(-x)
@@ -60,6 +61,7 @@ def create_random_network():
     return network
     
 def create_empty_network():
+
     layers = neuron_count
 
     #preparing space for structure of network
@@ -84,14 +86,18 @@ def create_empty_network():
 
 
 def save_network(path, network):
+
     with open(path, 'wb') as f:
         pickle.dump(network, f)
+
 def load_network(path):
+
     with open(path, 'rb') as f:
         mynewlist = pickle.load(f)
     return mynewlist
 
 def randomize_network(weightof, network, from_numb, to_numb):
+
     s=0
     for weight in weightof:
         s+=1
@@ -112,6 +118,7 @@ def randomize_network(weightof, network, from_numb, to_numb):
 
 
 def train_network_batch(network, learning_rate):
+
     cost_net = []
     for i in range(5):
         cost_net.append(create_empty_network())
@@ -247,6 +254,7 @@ def train_network_batch(network, learning_rate):
 
     return network
 
+
 def test_accuracy(network):
     
     correct = 0
@@ -265,6 +273,7 @@ def test_accuracy(network):
     print(f"Correct: " + str(correct) + " Incorrect: " + str(incorrect) + " " + str((100*correct)/(8900)))    
 
 def load_all_images(path):
+
     # csv file name
     filename = path
 
@@ -313,6 +322,7 @@ def load_all_images(path):
     return b
 
 def softmax(a, b):
+
     total = 0
     for i in b:
         total += numpy.exp(i) 
@@ -320,6 +330,7 @@ def softmax(a, b):
     return total
 
 def test_network(network, path):
+
     total_output = []
     for p in range(layer_count-1):
         layer_output = []
